@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Pacientes</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h2>Bienvenido a la Gestión de Pacientes</h2>
+  <!-- Formularios y botones de insertar/consultar médicos y pacientes -->
+    <!-- Incluir barra de navegación desde navbar.html -->
+    <div id="navbar"></div>
+
+    <script>
+        // Insertar el contenido de navbar.html en el elemento con id "navbar"
+        fetch('/navbar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('navbar').innerHTML = data;
+            })
+            .catch(error => console.error('Error cargando el navbar:', error));
+        fetch('/tipo-usuario')
+          .then(response => response.json())
+          .then(data => {
+            const menu = document.getElementById('menu');
+            const tipoUsuario = data.tipo_usuario;
+
+            // Agregar opciones de menú según el tipo de usuario
+            if (tipoUsuario === 'admin') {
+                menu.innerHTML += '<li><a href="/ver-usuarios">Ver Usuarios</a></li>';
+                menu.innerHTML += '<li><a href="/gestionar-registros">Gestionar Registros</a></li>';
+            } else if (tipoUsuario === 'medico') {
+                menu.innerHTML += '<li><a href="/buscar-pacientes">Ver Pacientes</a></li>';
+                menu.innerHTML += '<li><a href="/editar-pacientes">Editar Pacientes</a></li>';
+            } else if (tipoUsuario === 'paciente') {
+                menu.innerHTML += '<li><a href="/ver-mis-datos">Mis Datos</a></li>';
+            }
+
+            // Opción de cerrar sesión para todos los tipos de usuario
+            menu.innerHTML += '<li><a href="/logout">Cerrar Sesión</a></li>';
+        })
+        .catch(error => console.error('Error obteniendo el tipo de usuario:', error));
+    </script>
+  <h1>Bienvenido a la Gestión de Pacientes</h1>
+  <p>Esta es una página básica para administrar pacientes y sus signos vitales y además de administrar los medicos.</p>
+  <form action="/submit-data" method="POST">
+    <label for="name">Nombre del paciente:</label>
+    <input type="text" id="name" name="name">
+    
+    <label for="age">Edad:</label>
+    <input type="number" id="age" name="age">
+  
+    <label for="heart-rate">Frecuencia Cardiaca (bpm):</label>
+    <input type="number" id="heart-rate" name="heart_rate">
+
+    <label for="presion">Presion del Paciente:</label>
+    <input type="number" id="presion" name="presion">
+
+    <label for="Peso">Peso del Paciente:</label>
+    <input type="number" id="peso" name="peso">
+  
+    <button type="submit">Guardar</button>
+  </form>
+  <h2>Buscar Pacientes</h2>
+  <form action="/buscar-pacientes" method="GET">
+    <label for="name-search">Nombre del paciente:</label>
+    <input type="text" id="name-search" name="name_search">
+    
+    <label for="age-search">Edad del paciente:</label>
+    <input type="number" id="age-search" name="age_search">
+    
+    <button type="submit">Buscar</button>
+    <button onclick="window.location.href='/ordenar-pacientes'">Ordenar por Frecuencia Cardiaca</button>
+  </form>
+  <button onclick="window.location.href='/pacientes'">Ver Pacientes Guardados</button>
+  <h2>Registrar Médico</h2>
+<form action="/insertar-medico" method="POST">
+  <label for="medico-name">Nombre del médico:</label>
+  <input type="text" id="medico-name" name="medico_name">
+
+  <label for="especialidad">Especialidad:</label>
+  <input type="text" id="especialidad" name="especialidad">
+
+  <button type="submit">Guardar Médico</button>
+</form>
+<button onclick="window.location.href='/medicos'">Ver Medicos Guardados</button>
+<button onclick="window.location.href='/medicosALF'">Ver Medicos Guardados alfabeticamente</button>
+</body>
+</html>
